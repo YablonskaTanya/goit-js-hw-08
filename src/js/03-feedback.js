@@ -6,10 +6,12 @@ const refs = {
   message: document.querySelector('textarea[name="message"]'),
 };
 
+const { email, message, form } = refs;
+
 const LOCAL_STORAGE_KEY = 'feedback-form-state';
 
-refs.form.addEventListener('input', throttle(onFormInput, 500));
-refs.form.addEventListener('submit', onFormSubmit);
+form.addEventListener('input', throttle(onFormInput, 500));
+form.addEventListener('submit', onFormSubmit);
 
 let formData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
 
@@ -20,15 +22,21 @@ function onFormInput(e) {
 
 function onFormSubmit(e) {
   e.preventDefault();
-  e.target.reset();
-  formData = {};
-  console.log(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)));
-  localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+  if (!email.value || !message.value) {
+    alert('всі поля повиннібути заповнені');
+  } else {
+    e.target.reset();
+    formData = {};
+    console.log(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)));
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  }
 }
 
 function getValueFromLocalStorage() {
-  const { email, message } = refs;
+  //const { email, message } = refs;
   email.value = formData.email || '';
   message.value = formData.message || '';
 }
+
 getValueFromLocalStorage();
